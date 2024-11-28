@@ -1,3 +1,5 @@
+import { UserController } from "./api.js";
+
 export const userController = new UserController();
 
 (function initialize() {

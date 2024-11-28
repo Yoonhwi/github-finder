@@ -18,17 +18,20 @@ import { userController } from "./initialize.js";
 
     profileSection.classList.remove("flex");
     const fragement = document.createDocumentFragment();
+    
     userController.users.forEach((user) => {
       const el = document.createElement("div");
       el.classList.add("profile-card");
       const img = document.createElement("img");
-      img.src = user.avatar_url;
+      img.src = user.node.avatarUrl;
+
       img.addEventListener("click", async () => {
-        const current = await userController.searchDetailUser(user.login);
+        const current = await userController.searchDetailUser(user.node.login);
         userController.currentUser = current;
       });
+
       const name = document.createElement("span");
-      name.textContent = user.login;
+      name.textContent = user.node.login;
 
       el.appendChild(img);
       el.appendChild(name);
