@@ -1,0 +1,85 @@
+.main {
+  margin-top: 80px;
+  display: flex;
+  justify-content: center;
+}
+
+/*   search-section   */
+.search-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border: 2px solid var(--gray-300);
+  border-radius: 8px;
+}
+
+.search-form {
+  display: flex;
+  gap: 8px;
+}
+
+.search-form input {
+  flex: 1;
+  padding: 8px;
+  border: 2px solid var(--gray-200);
+  border-radius: 8px;
+}
+
+.search-form button {
+  padding: 10px 5px;
+}
+
+/*   profile-section   */
+.profile-section {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 32px;
+  padding: 24px 40px;
+  border: 2px solid var(--gray-300);
+  border-radius: 8px;
+}
+
+.profile-section.flex {
+  display: flex;
+  padding: 12px;
+}
+
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-card img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  cursor: pointer;
+
+  transition: all 0.3s;
+}
+
+.profile-card span {
+  width: 100px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-card img:hover {
+  scale: 1.1;
+}
+
+/*   detail-user-section   */
+.detail-user-section {
+  display: flex;
+  gap: 24px;
+  padding: 12px;
+  border: 2px solid var(--gray-300);
+  border-radius: 8px;
+}
