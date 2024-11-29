@@ -15,78 +15,59 @@ class Api {
   }
 
   async getUsers(userId) {
-    try {
-      const response = await fetch(
-        `${this.baseURL}/search/users?q=${userId}&client_id=undefined&client_secret=undefined`,
-        {
-          headers: {
-            Authorization: `Bearer ${this.API_TOKEN}`,
-          },
-        }
-      );
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Api Error getUsers", error);
+    const response = await fetch(
+      `${this.baseURL}/search/users?q=${userId}&client_id=undefined&client_secret=undefined`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.API_TOKEN}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Get Users API Error");
     }
+    const data = await response.json();
+    return data;
   }
 
   async getUserRepos(userId) {
-    try {
-      const response = await fetch(`${this.baseURL}/users/${userId}/repos`);
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Api Error getUserRepos", error);
+    const response = await fetch(`${this.baseURL}/users/${userId}/repos`, {
+      headers: {
+        Authorization: `Bearer ${this.API_TOKEN}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Get User Repos API Error");
     }
-  }
-
-  async getCommits(userId) {
-    try {
-      const response = await fetch(`${this.baseURL}/${userId}/events`);
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Api Error getCommits", error);
-    }
+    const data = await response.json();
+    return data;
   }
 
   async getDetailUser(userId) {
-    try {
-      const response = await fetch(`${this.baseURL}/users/${userId}`);
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Api Error getDetailUser", error);
+    const response = await fetch(`${this.baseURL}/users/${userId}`);
+    if (!response.ok) {
+      throw new Error("Get Detail User API Error");
     }
+    const data = await response.json();
+    return data;
   }
 }
 
 export class UserApi {
-  domController = null;
-  users = null;
-  repos = null;
-  currentUser = null;
-
   constructor() {
     this.api = Api.getInstance();
   }
 
   searchAllUsers = async (userId) => {
     const response = await this.api.getUsers(userId);
-    this.users = response.items.length ? response.items : null;
-    return this.users;
+    return response.items?.length ? response.items : null;
   };
 
   searchAllRepos = async (userId) => {
-    const response = await this.api.getUserRepos(userId);
-    this.repos = response;
-    return this.repos;
+    return await this.api.getUserRepos(userId);
   };
 
   searchDetailUser = async (userId) => {
-    const response = await this.api.getDetailUser(userId);
-    this.currentUser = response;
-    return this.currentUser;
+    return await this.api.getDetailUser(userId);
   };
 }

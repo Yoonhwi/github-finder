@@ -13,11 +13,21 @@ export const removeElChild = (el) => {
   }
 };
 
-export const withCabllacks = (fn, onStart, onEnd) => {
+export const withWrapping = (fn, onStart, onEnd) => {
   return async (...args) => {
     onStart?.();
     const response = await fn(...args);
     onEnd?.();
     return response;
+  };
+};
+
+export const withErrorHandle = (fn, onError) => {
+  return async (...args) => {
+    try {
+      return await fn(...args);
+    } catch (error) {
+      onError?.(error);
+    }
   };
 };

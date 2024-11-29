@@ -7,10 +7,49 @@ import {
   UserDetailDescription,
   UserDetailCommitImg,
 } from "./components.js";
-import { withCabllacks } from "./utils.js";
+import { withWrapping, withErrorHandle } from "./utils.js";
 
 export const userApi = new UserApi();
 export const domRenderer = new DomRenderer();
+
+const searchAllUsers = withErrorHandle(
+  withWrapping(
+    userApi.searchAllUsers,
+    domRenderer.showSearchUsersLoading,
+    domRenderer.hideSearchUsersLoading
+  ),
+  (error) => {
+    alert(error.message);
+    domRenderer.hideSearchUsersLoading();
+  }
+);
+
+const searchDetailUser = withErrorHandle(
+  withWrapping(
+    userApi.searchDetailUser,
+    () => {
+      domRenderer.showDetailUserLoading();
+      domRenderer.showDetailUserReposLoading();
+    },
+    domRenderer.hideDetailUserLoading
+  ),
+  (error) => {
+    alert(error.message);
+    domRenderer.hideDetailUserLoading();
+  }
+);
+
+const searchAllRepos = withErrorHandle(
+  withWrapping(
+    userApi.searchAllRepos,
+    null,
+    domRenderer.hideDetailUserReposLoading
+  ),
+  (error) => {
+    alert(error.message);
+    domRenderer.hideDetailUserReposLoading();
+  }
+);
 
 (function initialize() {
   userApi.domController = domRenderer;
@@ -33,41 +72,20 @@ export const domRenderer = new DomRenderer();
     }
   });
 
-  const searchAllUsersWithLoading = withCabllacks(
-    userApi.searchAllUsers,
-    domRenderer.showSearchUsersLoading,
-    domRenderer.hideSearchUsersLoading
-  );
-
-  const searchDetailUserWithLoading = withCabllacks(
-    userApi.searchDetailUser,
-    () => {
-      domRenderer.showDetailUserLoading();
-      domRenderer.showDetailUserReposLoading();
-    },
-    domRenderer.hideDetailUserLoading
-  );
-
-  const searchAllReposWithLoading = withCabllacks(
-    userApi.searchAllRepos,
-    null,
-    domRenderer.hideDetailUserReposLoading
-  );
-
   searchBtn.addEventListener("click", async (e) => {
     e.preventDefault();
     if (searchInput.value === "") return;
 
-    const users = await searchAllUsersWithLoading(searchInput.value);
+    const users = await searchAllUsers(searchInput.value);
 
-    const userProfiles = users.map(
+    const userProfiles = users?.map(
       (user) =>
         new UserCard(user, async () => {
           domRenderer.deleteUserInfo();
           domRenderer.deleteCommitImg();
           domRenderer.deleteUserRepos();
-          const detailUser = await searchDetailUserWithLoading(user.login);
-          const repos = await searchAllReposWithLoading(user.login);
+          const detailUser = await searchDetailUser(user.login);
+          const repos = await searchAllRepos(user.login);
           domRenderer.renderDetailUser(
             new UserDetailImg(detailUser),
             new UserDetailTag(detailUser),

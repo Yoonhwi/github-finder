@@ -23,7 +23,7 @@ export class DomRenderer {
   renderUsers = (userCards) => {
     this.deleteUsers();
 
-    if (!userCards || !userCards.length) {
+    if (!userCards || !userCards?.length) {
       const el = document.createElement("p");
       el.textContent = "No users found!";
       this.profileSection.appendChild(el);
