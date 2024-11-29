@@ -152,7 +152,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 60px;
+  min-height: 60px;
 
   border: 1px solid var(--gray-200);
   padding: 0 16px;
@@ -181,4 +181,28 @@
   width: 120px;
   border-radius: 4px;
   background-color: var(--gray-500);
+}
+
+@media screen and (max-width: 968px) {
+  .user-info-flex {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .user-info-flex img {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+  }
+
+  .user-info-right {
+    width: 100%;
+  }
+
+  .user-repo {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+    gap: 8px;
+  }
 }

@@ -12,9 +12,6 @@
   background-color: var(--primary);
 }
 
-.center {
-  width: 968px;
-}
 
 .main .center {
   display: flex;

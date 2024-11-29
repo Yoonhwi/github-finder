@@ -33,8 +33,13 @@ button {
   background-color: var(--primary);
 }
 
-/*
+.center {
+  width: 968px;
+}
 
-반응형 추가할때 , center 만 수정하면됨.
-
-*/
+@media screen and (max-width: 968px) {
+  .center {
+    width: 100%;
+    padding: 0 16px;
+  }
+}
