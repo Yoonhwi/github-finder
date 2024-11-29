@@ -1,8 +1,17 @@
 class Api {
+  static instance = null;
+
   constructor() {
     this.graphqlURL = "https://api.github.com/graphql";
     this.baseURL = "https://api.github.com";
     this.API_TOKEN = import.meta.env.VITE_API_TOKEN;
+  }
+
+  static getInstance() {
+    if (!this.instance) {
+      this.instance = new Api();
+    }
+    return this.instance;
   }
 
   async getUsers(userId) {
@@ -53,47 +62,31 @@ class Api {
   }
 }
 
-export class UserController {
+export class UserApi {
   domController = null;
   users = null;
   repos = null;
-  commits = null;
   currentUser = null;
-  userCounter = null;
 
   constructor() {
-    this.api = new Api();
+    this.api = Api.getInstance();
   }
 
-  async searchAllUsers(userId) {
-    this.domController.showSearchUsersLoading();
+  searchAllUsers = async (userId) => {
     const response = await this.api.getUsers(userId);
-    this.userCounter = response.total_count;
     this.users = response.items.length ? response.items : null;
-    this.domController.hideSearchUsersLoading();
-
     return this.users;
-  }
+  };
 
-  async searchAllRepos(userId) {
+  searchAllRepos = async (userId) => {
     const response = await this.api.getUserRepos(userId);
     this.repos = response;
-    this.domController.hideDetailUserReposLoading();
     return this.repos;
-  }
+  };
 
-  async searchDetailUser(userId) {
-    this.domController.showDetailUserLoading();
-    this.domController.showDetailUserReposLoading();
+  searchDetailUser = async (userId) => {
     const response = await this.api.getDetailUser(userId);
     this.currentUser = response;
-    this.domController.hideDetailUserLoading();
     return this.currentUser;
-  }
-
-  async searchCommits(userId) {
-    const response = await this.api.getCommits(userId);
-    this.commits = response;
-    return this.commits;
-  }
+  };
 }
