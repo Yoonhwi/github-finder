@@ -205,7 +205,10 @@
 @media screen and (max-width: 968px) {
   .user-info-flex {
     flex-direction: column;
-    align-items: center;
+  }
+
+  .user-info-flex img {
+    align-self: center;
   }
 
   .user-info-flex img {
