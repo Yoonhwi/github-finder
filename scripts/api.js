@@ -4,42 +4,6 @@ class Api {
     this.baseURL = "https://api.github.com";
     this.API_TOKEN = import.meta.env.VITE_API_TOKEN;
   }
-  // async getUsers(userId) {
-  //   try {
-  //     const response = await fetch(this.graphqlURL, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${this.API_TOKEN}`,
-  //       },
-  //       body: JSON.stringify({
-  //         query: `query searchUsers($userId: String!) {
-  //           search(query: $userId, type: USER, first: 30) {
-  //             userCount
-  //             edges {
-  //               node {
-  //                 ... on User {
-  //                   login
-  //                   avatarUrl
-  //                 }
-  //               }
-  //             }
-  //           }
-  //         }`,
-  //         variables: { userId: `in:login ${userId} is:user -is:inactive` }, // $userId 값 전달
-  //       }),
-  //     });
-
-  //     const { data, errors } = await response.json();
-  //     if (errors) {
-  //       console.error("Api Error getUsers", errors);
-  //       return;
-  //     }
-  //     return data.search;
-  //   } catch (error) {
-  //     console.error("Api Error getUsers", error);
-  //   }
-  // }
 
   async getUsers(userId) {
     try {

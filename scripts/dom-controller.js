@@ -9,14 +9,15 @@ export default class DomController {
 
   init() {
     this.detailUserSection = document.querySelector(".detail-user-section");
+    this.detailUserInfo = document.querySelector(".detail-user-info");
     this.profileSection = document.querySelector(".profile-section");
-    this.detailUserInfo = document.querySelector(".user-info-flex");
-    this.detailUserRepos = document.querySelector(".user-repo-flex");
+    this.userInfoEl = document.querySelector(".user-info-flex");
+    this.userRepoEl = document.querySelector(".user-repo-flex");
 
     if (
       !this.profileSection ||
-      !this.detailUserInfo ||
-      !this.detailUserRepos ||
+      !this.userInfoEl ||
+      !this.userRepoEl ||
       !this.detailUserSection
     ) {
       console.error("None Element Error");
@@ -64,14 +65,18 @@ export default class DomController {
   }
 
   renderDetailUser() {
-    while (this.detailUserInfo.firstChild) {
-      this.detailUserInfo.removeChild(this.detailUserInfo.firstChild);
+    while (this.userInfoEl.firstChild) {
+      this.userInfoEl.removeChild(this.userInfoEl.firstChild);
     }
 
     const user = this.userController.currentUser;
 
     const img = document.createElement("img");
+    img.classList.add("user-img");
     img.src = user.avatar_url;
+    img.addEventListener("click", () => {
+      window.open(user.html_url, "_blank");
+    });
 
     const userInfoRight = document.createElement("div");
     userInfoRight.classList.add("user-info-right");
@@ -118,13 +123,24 @@ export default class DomController {
 
     userInfoRight.appendChild(userTagsEl);
     userInfoRight.appendChild(userDescription);
-    this.detailUserInfo.appendChild(img);
-    this.detailUserInfo.appendChild(userInfoRight);
+    this.userInfoEl.appendChild(img);
+    this.userInfoEl.appendChild(userInfoRight);
+
+    const existImg = this.detailUserInfo.querySelector(".commit-img");
+    if (existImg) {
+      this.detailUserInfo.removeChild(existImg);
+    }
+
+    const commitImg = document.createElement("img");
+    commitImg.classList.add("commit-img");
+    commitImg.src = `https://ghchart.rshah.org/328049/${user.login}`;
+
+    this.detailUserInfo.appendChild(commitImg);
   }
 
   renderDetailRepos() {
-    while (this.detailUserRepos.firstChild) {
-      this.detailUserRepos.removeChild(this.detailUserRepos.firstChild);
+    while (this.userRepoEl.firstChild) {
+      this.userRepoEl.removeChild(this.userRepoEl.firstChild);
     }
 
     const repos = this.userController.repos;
@@ -155,7 +171,7 @@ export default class DomController {
       fragement.appendChild(repoEl);
     });
 
-    this.detailUserRepos.appendChild(fragement);
+    this.userRepoEl.appendChild(fragement);
   }
 
   scrollToDetail() {
