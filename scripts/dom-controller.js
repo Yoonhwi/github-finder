@@ -133,6 +133,13 @@ export class DomController {
     this.deleteUserRepos();
     const repos = this.userController.repos;
 
+    if (!repos || !repos.length) {
+      const el = document.createElement("p");
+      el.textContent = "Empty Repositories";
+      this.userRepoEl.appendChild(el);
+      return;
+    }
+
     const fragement = document.createDocumentFragment();
     repos.forEach((repo) => {
       const repoEl = document.createElement("div");
