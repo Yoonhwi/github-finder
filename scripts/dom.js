@@ -1,7 +1,4 @@
-import DomController from "./dom-controller.js";
-
-const domController = new DomController();
-domController.init();
+import { domController } from "./initialize.js";
 
 (function dom() {
   document.addEventListener("usersUpdated", () => domController.renderUsers());

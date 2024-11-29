@@ -1,9 +1,8 @@
-import { userController } from "./initialize.js";
 import { userTags, userDes, repoTags } from "./constant.js";
 import { formatDate } from "./utils.js";
 
-export default class DomController {
-  constructor() {
+export class DomController {
+  constructor(userController) {
     this.userController = userController;
   }
 
@@ -26,9 +25,7 @@ export default class DomController {
   }
 
   renderUsers() {
-    while (this.profileSection.firstChild) {
-      this.profileSection.removeChild(this.profileSection.firstChild);
-    }
+    this.deleteUsers();
 
     if (!this.userController.users || !this.userController.users.length) {
       const el = document.createElement("p");
@@ -48,6 +45,9 @@ export default class DomController {
       img.src = user.avatar_url;
 
       img.addEventListener("click", async () => {
+        this.deleteUserInfo();
+        this.deleteCommitImg();
+        this.deleteUserRepos();
         await this.userController.searchDetailUser(user.login);
         await this.userController.searchAllRepos(user.login);
 
@@ -65,10 +65,6 @@ export default class DomController {
   }
 
   renderDetailUser() {
-    while (this.userInfoEl.firstChild) {
-      this.userInfoEl.removeChild(this.userInfoEl.firstChild);
-    }
-
     const user = this.userController.currentUser;
 
     const img = document.createElement("img");
@@ -126,11 +122,6 @@ export default class DomController {
     this.userInfoEl.appendChild(img);
     this.userInfoEl.appendChild(userInfoRight);
 
-    const existImg = this.detailUserInfo.querySelector(".commit-img");
-    if (existImg) {
-      this.detailUserInfo.removeChild(existImg);
-    }
-
     const commitImg = document.createElement("img");
     commitImg.classList.add("commit-img");
     commitImg.src = `https://ghchart.rshah.org/328049/${user.login}`;
@@ -139,10 +130,7 @@ export default class DomController {
   }
 
   renderDetailRepos() {
-    while (this.userRepoEl.firstChild) {
-      this.userRepoEl.removeChild(this.userRepoEl.firstChild);
-    }
-
+    this.deleteUserRepos();
     const repos = this.userController.repos;
 
     const fragement = document.createDocumentFragment();
@@ -180,5 +168,86 @@ export default class DomController {
       top: offsetTop - 60,
       behavior: "smooth",
     });
+  }
+
+  createSpinner() {
+    const boxEl = document.createElement("div");
+    boxEl.classList.add("spinner-box");
+    const spinnerEl = document.createElement("div");
+    spinnerEl.classList.add("spinner");
+
+    boxEl.appendChild(spinnerEl);
+    return boxEl;
+  }
+
+  showSearchUsersLoading() {
+    while (this.profileSection.firstChild) {
+      this.profileSection.removeChild(this.profileSection.firstChild);
+    }
+    const spinnerEl = this.createSpinner();
+    this.profileSection.appendChild(spinnerEl);
+    this.profileSection.classList.add("loading");
+  }
+
+  hideSearchUsersLoading() {
+    while (this.profileSection.firstChild) {
+      this.profileSection.removeChild(this.profileSection.firstChild);
+    }
+    this.profileSection.classList.remove("loading");
+  }
+
+  showDetailUserLoading() {
+    while (this.userInfoEl.firstChild) {
+      this.userInfoEl.removeChild(this.userInfoEl.firstChild);
+    }
+
+    const spinnerEl = this.createSpinner();
+    this.userInfoEl.appendChild(spinnerEl);
+  }
+
+  hideDetailUserLoading() {
+    while (this.userInfoEl.firstChild) {
+      this.userInfoEl.removeChild(this.userInfoEl.firstChild);
+    }
+  }
+
+  showDetailUserReposLoading() {
+    while (this.userRepoEl.firstChild) {
+      this.userRepoEl.removeChild(this.userRepoEl.firstChild);
+    }
+
+    const spinnerEl = this.createSpinner();
+    this.userRepoEl.appendChild(spinnerEl);
+  }
+
+  hideDetailUserReposLoading() {
+    while (this.userRepoEl.firstChild) {
+      this.userRepoEl.removeChild(this.userRepoEl.firstChild);
+    }
+  }
+
+  deleteCommitImg() {
+    const existImg = this.detailUserInfo.querySelector(".commit-img");
+    if (existImg) {
+      this.detailUserInfo.removeChild(existImg);
+    }
+  }
+
+  deleteUserRepos() {
+    while (this.userRepoEl.firstChild) {
+      this.userRepoEl.removeChild(this.userRepoEl.firstChild);
+    }
+  }
+
+  deleteUserInfo() {
+    while (this.userInfoEl.firstChild) {
+      this.userInfoEl.removeChild(this.userInfoEl.firstChild);
+    }
+  }
+
+  deleteUsers() {
+    while (this.profileSection.firstChild) {
+      this.profileSection.removeChild(this.profileSection.firstChild);
+    }
   }
 }

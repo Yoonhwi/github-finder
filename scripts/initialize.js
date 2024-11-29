@@ -1,8 +1,12 @@
-import { UserController } from "./api.js";
+import { UserController } from "./user-controller.js";
+import { DomController } from "./dom-controller.js";
 
 export const userController = new UserController();
+export const domController = new DomController(userController);
 
 (function initialize() {
+  userController.domController = domController;
+  domController.init();
   const searchBtn = document.querySelector(".search-button");
   const searchInput = document.getElementById("search-input");
 

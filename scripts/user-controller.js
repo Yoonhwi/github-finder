@@ -54,6 +54,7 @@ class Api {
 }
 
 export class UserController {
+  domController = null;
   users = null;
   repos = null;
   commits = null;
@@ -65,9 +66,11 @@ export class UserController {
   }
 
   async searchAllUsers(userId) {
+    this.domController.showSearchUsersLoading();
     const response = await this.api.getUsers(userId);
     this.userCounter = response.total_count;
     this.users = response.items.length ? response.items : null;
+    this.domController.hideSearchUsersLoading();
 
     return this.users;
   }
@@ -75,12 +78,16 @@ export class UserController {
   async searchAllRepos(userId) {
     const response = await this.api.getUserRepos(userId);
     this.repos = response;
+    this.domController.hideDetailUserReposLoading();
     return this.repos;
   }
 
   async searchDetailUser(userId) {
+    this.domController.showDetailUserLoading();
+    this.domController.showDetailUserReposLoading();
     const response = await this.api.getDetailUser(userId);
     this.currentUser = response;
+    this.domController.hideDetailUserLoading();
     return this.currentUser;
   }
 
