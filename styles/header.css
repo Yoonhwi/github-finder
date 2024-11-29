@@ -12,9 +12,32 @@
   background-color: var(--primary);
 }
 
-
-.main .center {
+.header .center {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0 4px;
+}
+
+.darkmode-btn {
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+}
+
+.sun-btn {
+  display: none;
+}
+
+.moon-btn {
+  display: unset;
+}
+
+:root.dark .sun-btn {
+  display: unset;
+}
+
+:root.dark .moon-btn {
+  display: none;
 }

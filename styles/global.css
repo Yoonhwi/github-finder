@@ -7,6 +7,8 @@
 
 body {
   margin-bottom: 120px;
+  background-color: var(--white);
+  color: var(--black);
 }
 
 :root {
@@ -26,11 +28,20 @@ body {
   --black: #000;
 }
 
+:root.dark {
+  --primary: #2d3748;
+  --white: #000;
+  --black: #fff;
+
+  --gray-500: #e2e8f0;
+}
+
 button {
   cursor: pointer;
   border: none;
   border-radius: 8px;
   background-color: var(--primary);
+  color: var(--gray-500);
 }
 
 .center {

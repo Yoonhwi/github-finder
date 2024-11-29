@@ -4,6 +4,12 @@
   justify-content: center;
 }
 
+.main .center {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 /*   search-section   */
 .search-section {
   width: 100%;
