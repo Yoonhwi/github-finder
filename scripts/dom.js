@@ -1,42 +1,13 @@
-import { userController } from "./initialize.js";
+import DomController from "./dom-controller.js";
+
+const domController = new DomController();
+domController.init();
 
 (function dom() {
-  const profileSection = document.querySelector(".profile-section");
-
-  document.addEventListener("usersUpdated", () => {
-    while (profileSection.firstChild) {
-      profileSection.removeChild(profileSection.firstChild);
-    }
-
-    if (!userController.users || !userController.users.length) {
-      const el = document.createElement("p");
-      el.textContent = "No users found!";
-      profileSection.appendChild(el);
-      profileSection.classList.add("flex");
-      return;
-    }
-
-    profileSection.classList.remove("flex");
-    const fragement = document.createDocumentFragment();
-    
-    userController.users.forEach((user) => {
-      const el = document.createElement("div");
-      el.classList.add("profile-card");
-      const img = document.createElement("img");
-      img.src = user.node.avatarUrl;
-
-      img.addEventListener("click", async () => {
-        const current = await userController.searchDetailUser(user.node.login);
-        userController.currentUser = current;
-      });
-
-      const name = document.createElement("span");
-      name.textContent = user.node.login;
-
-      el.appendChild(img);
-      el.appendChild(name);
-      fragement.appendChild(el);
-    });
-    profileSection.appendChild(fragement);
+  document.addEventListener("usersUpdated", () => domController.renderUsers());
+  document.addEventListener("userDetailUpdated", () => {
+    domController.renderDetailUser();
+    domController.renderDetailRepos();
+    domController.scrollToDetail();
   });
 })();

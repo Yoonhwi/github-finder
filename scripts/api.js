@@ -1,42 +1,62 @@
 class Api {
   constructor() {
-    this.baseURL = "https://api.github.com/graphql";
+    this.graphqlURL = "https://api.github.com/graphql";
+    this.baseURL = "https://api.github.com";
     this.API_TOKEN = import.meta.env.VITE_API_TOKEN;
   }
+  // async getUsers(userId) {
+  //   try {
+  //     const response = await fetch(this.graphqlURL, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${this.API_TOKEN}`,
+  //       },
+  //       body: JSON.stringify({
+  //         query: `query searchUsers($userId: String!) {
+  //           search(query: $userId, type: USER, first: 30) {
+  //             userCount
+  //             edges {
+  //               node {
+  //                 ... on User {
+  //                   login
+  //                   avatarUrl
+  //                 }
+  //               }
+  //             }
+  //           }
+  //         }`,
+  //         variables: { userId: `in:login ${userId} is:user -is:inactive` }, // $userId 값 전달
+  //       }),
+  //     });
+
+  //     const { data, errors } = await response.json();
+  //     if (errors) {
+  //       console.error("Api Error getUsers", errors);
+  //       return;
+  //     }
+  //     return data.search;
+  //   } catch (error) {
+  //     console.error("Api Error getUsers", error);
+  //   }
+  // }
+
   async getUsers(userId) {
     try {
-      const response = await fetch(this.baseURL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${this.API_TOKEN}`,
-        },
-        body: JSON.stringify({
-          query:`query searchUsers($userId: String!) { search(query: "$userId is:user is:active", type: USER, first: 30) { userCount edges { node { ... on User { login avatarUrl } } } } }`,
-          variables: JSON.stringify({ userId  
-        }),
-        }),
-      });
-  
-      const { data, errors } = await response.json();
-
-      const filteredUsers = data.search.edges.filter(
-        edge => edge.node && edge.node.login && edge.node.avatarUrl
+      const response = await fetch(
+        `${this.baseURL}/search/users?q=${userId}&client_id=undefined&client_secret=undefined`,
+        {
+          headers: {
+            Authorization: `Bearer ${this.API_TOKEN}`,
+          },
+        }
       );
-
-      console.log("filteredUsers", filteredUsers);
-  
-      if (errors) {
-        console.error("GraphQL Errors", errors);
-        return null;
-      }
-  
-      return {...data.search , edges:filteredUsers};
+      const data = await response.json();
+      return data;
     } catch (error) {
       console.error("Api Error getUsers", error);
     }
   }
-  
 
   async getUserRepos(userId) {
     try {
@@ -71,7 +91,7 @@ class Api {
 
 export class UserController {
   users = null;
-  repose = null;
+  repos = null;
   commits = null;
   currentUser = null;
   userCounter = null;
@@ -82,10 +102,9 @@ export class UserController {
 
   async searchAllUsers(userId) {
     const response = await this.api.getUsers(userId);
-    console.log("response", response);
-    this.userCounter = response.userCounter;
-    this.users = response.edges.length ? response.edges : null;
-    console.log("pages", this.userCounter);
+    this.userCounter = response.total_count;
+    this.users = response.items.length ? response.items : null;
+
     return this.users;
   }
 

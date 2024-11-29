@@ -11,7 +11,5 @@ export const userController = new UserController();
     if (searchInput.value === "") return;
     await userController.searchAllUsers(searchInput.value);
     document.dispatchEvent(new CustomEvent("usersUpdated"));
-
-    console.log("all users : ", userController.users);
   });
 })();
